@@ -1132,6 +1132,9 @@ const fetchAnalysis = id => {
       dataType: 'json',
       type: 'GET',
       crossDomain: true,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
       success: function(data) {
         console.log(data)
         resolve(data)

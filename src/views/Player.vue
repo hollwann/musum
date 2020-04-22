@@ -47,6 +47,7 @@ export default {
     try {
       this.driver = await go(this.song.id)
     } catch (e) {
+      console.log(e)
       navigator.notification.alert(
         'Ocurrió un error cargando la canción. Intentalo mas tarde.'
       )

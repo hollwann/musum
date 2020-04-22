@@ -26,6 +26,9 @@
 	<platform name="ios">
 		<allow-intent href="itms:*" />
 		<allow-intent href="itms-apps:*" />
+		<preference name="DisallowOverscroll" value="true" />
+		<preference name="StatusBarOverlaysWebView" value="false" />
+		<preference name="StatusBarBackgroundColor" value="#b30083" />
 	</platform>
 	<platform name="ios">
 		<icon src="res/icon/ios/icon-1024.png" width="1024" height="1024" />

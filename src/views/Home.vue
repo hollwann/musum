@@ -103,6 +103,9 @@ export default {
         dataType: 'json',
         type: 'GET',
         crossDomain: true,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        },
         success: data => {
           this.songList = data
           this.loading = false

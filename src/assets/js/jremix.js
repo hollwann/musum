@@ -2,13 +2,29 @@ import $ from 'jquery'
 function createJRemixer(context) {
   var remixer = {
     remixTrackById: function(id, callback) {
-      $.getJSON(
+      const url =
         'https://cors-anywhere.herokuapp.com/https://eternalbox.dev/api/info/' +
-          id,
-        function(data) {
+        id
+      $.ajax({
+        url: url,
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: data => {
           remixer.remixTrack(data, callback)
+        },
+        error: (xhr, textStatus, error) => {
+          console.log(xhr)
+          console.log(textStatus)
+          console.log(error)
+          navigator.notification.alert(
+            'Ocurrio un error de conexión, intentalo de nuevo.'
+          )
         }
-      )
+      })
     },
 
     remixTrack: function(track, jukeboxData, callback) {
@@ -22,27 +38,24 @@ function createJRemixer(context) {
 
         request.onload = function() {
           trace('audio loaded')
-          if (false) {
-            track.buffer = context.createBuffer(request.response, false)
-            track.status = 'ok'
-            callback(1, track, 100)
-          } else {
-            context.decodeAudioData(
-              request.response,
-              function(buffer) {
-                // completed function
-                track.buffer = buffer
-                track.status = 'ok'
-                callback(1, track, 100)
-              },
-              function(e) {
-                // error function
-                track.status = 'error: loading audio'
-                callback(-1, track, 0)
-                console.log('audio error', e)
-              }
-            )
-          }
+
+          console.log(request.response)
+          context.decodeAudioData(
+            request.response,
+            function(buffer) {
+              // completed function
+              track.buffer = buffer
+              track.status = 'ok'
+              callback(1, track, 100)
+            },
+            function(e) {
+              // error function
+              track.status = 'error: loading audio'
+              callback(-1, track, 0)
+              console.log('audio error')
+              console.log(e)
+            }
+          )
         }
 
         request.onerror = function(e) {
@@ -199,9 +212,8 @@ function createJRemixer(context) {
       preprocessTrack(track)
       fetchAudio(
         jukeboxData.audioURL === null
-          ? 'https://cors-anywhere.herokuapp.com/https://eternalbox.dev/api/audio/jukebox/' +
-              track.info.id
-          : 'https://cors-anywhere.herokuapp.com/https://eternalbox.dev/api/audio/external?fallbackID=' +
+          ? 'https://eternalbox.dev/api/audio/jukebox/' + track.info.id
+          : 'https://eternalbox.dev/api/audio/external?fallbackID=' +
               track.info.id +
               '&url=' +
               encodeURIComponent(jukeboxData.audioURL)
